@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>弹幕墙</title>
+  <style>
+    .a{
+      background-color: rgb(80, 77, 75);
+      height: 500px;
+      width: 1200px;
+      margin: 0 auto;
+    }
+    .b1{
+      text-align: center;
+      vertical-align: middle;
+    }
+    input{
+      width: 1100px;
+      height: 30px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+<div id="ensemble" class="a"></div>
+<div id="shuru" class="b">
+  <div id="sr" class="b1">
+  <input id="inputwb" type="text" placeholder="输入想发送的内容"><button id="fs" style="width: 90px;height: 35px;">发射弹幕！</button></div>
+</div>
+<script>
+        var WIN_WIDTH = 0;
+        var WIN_HEIGHT = 0;
+        var DANMU_LIST = [];
+        var SEQ = 1;
+
+
+        /**
+           随机数
+         */
+         function getRandom(start, end, fixed=0) {
+            let differ = end - start;
+            let random = Math.random();
+            return (start + differ * random).toFixed(fixed);
+        }
+
+
+        /**
+         生成弹幕
+         */
+         function danmu(text) {
+            let r = getRandom(0, 255);
+            let g = getRandom(0, 255);
+            let b = getRandom(0, 255);
+            let speed = getRandom(4, 8);
+            let size = getRandom(10, 50);
+            let top = getRandom(0, WIN_HEIGHT - 140);
+            let left = parseInt(getRandom(600, 3000)) + parseInt(WIN_WIDTH);
+
+            var danmu = document.createElement("div");  
+
+            danmu.style.position = "absolute";
+            danmu.style.left = left + "px";
+            danmu.style.top = top + "px";
+            danmu.style.fontSize = size + "px";
+            danmu.style.color = "rgb(" + r + ", " + g + ", " + b + ")";
+            danmu.style.whiteSpace = "nowrap"
+            danmu.id = "danmu_" + SEQ++; 
+            document.getElementById("ensemble").appendChild(danmu);  
+            document.getElementById(danmu.id).innerText = text;
+            var obj = {"id": danmu.id, "speed": speed, "length": -(5000 + WIN_WIDTH)};
+            console.log(obj.length, danmu.fontSize, WIN_WIDTH);
+            DANMU_LIST.push(obj);
+        }
+        function deleteDanmu(id) {
+            var danmu = document.getElementById(id);
+            console.log("delete" + danmu);
+            if (danmu != null) {
+                danmu.parentNode.removeChild(danmu);
+            }
+        }
+
+        /**
+          发射弹幕
+         */
+        function sendDanmu() {
+            var text = document.getElementById("inputwb").value;
+            document.getElementById("inputwb").value = "";
+            danmu(text);
+        }
+
+        /**
+          弹幕划过
+         */
+        function move(id, speed) {
+            speed = parseInt(speed);
+            var now = parseInt(document.getElementById(id).style.left);
+            document.getElementById(id).style.left = now - speed + "px";
+        }
+
+        /**
+          定时器
+         */
+        var int=self.setInterval("start()",10);
+        function start() {
+            for (var i = DANMU_LIST.length - 1; i >= 0; i--) {
+                move(DANMU_LIST[i].id, DANMU_LIST[i].speed);
+                if (parseInt(document.getElementById(DANMU_LIST[i].id).style.left) < DANMU_LIST[i].length) {
+                    deleteDanmu(DANMU_LIST[i].id);
+                    DANMU_LIST.splice(i, 1);
+                }
+            }
+            
+        }
+
+
+        /**
+          初始化
+         */
+        function initWindows() {
+            WIN_WIDTH = document.documentElement.clientWidth;
+            WIN_HEIGHT = document.documentElement.clientHeight;
+            document.getElementById("ensemble").style.height = (WIN_HEIGHT - 80) + "px";
+            document.getElementById("ensemble").style.width = (WIN_WIDTH - 20) + "px";
+            document.getElementById("sr").style.width = (WIN_WIDTH - 20) + "px";
+        }
+        window.onload = function() {
+            initWindows();
+            document.getElementById("sr").addEventListener("click", sendDanmu);
+            for (var i = 0; i < 1; i++) {
+              danmu("");
+            }
+            for (var i = 0; i < 1; i++) {
+              danmu("");
+            }
+            for (var i = 0; i < 1; i++) {
+              danmu("");
+            }
+            for (var i = 0; i < 1; i++) {
+              danmu("");
+            }
+        }
+        window.onresize = function() {
+            initWindows();
+        } 
+</script>
+</body>
+</html>
