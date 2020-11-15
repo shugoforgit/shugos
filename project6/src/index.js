@@ -11,6 +11,7 @@ var Button = ReactBootstrap.Button
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import 
 
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
@@ -187,7 +188,7 @@ class App extends React.Component {
                 </Content>
                 <Footer>
                     <div className="text-center">
-                        版权所有 &copy; shugo
+                        版权所有 &copy; shugo and heosinok
             </div>
                 </Footer>
             </div>
